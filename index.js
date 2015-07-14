@@ -28,19 +28,20 @@
  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-module.exports = function radialProgress(parent) {
+module.exports = function radialProgress(parent, options) {
+    options = options || {};
     var _data = null,
         _duration = 1000,
         _selection,
-        _margin = {
+        _margin = options.margin || {
             top: 0,
             right: 0,
             bottom: 30,
             left: 0
         },
-        __width = 300,
-        __height = 300,
-        _diameter,
+        __width = options.width || 300,
+        __height = options.height || 300,
+        _diameter = options.diameter || 150,
         _label = "",
         _fontSize = 10;
 
@@ -265,6 +266,10 @@ module.exports = function radialProgress(parent) {
         if (!arguments.length) return _mouseClick;
         _mouseClick = _;
         return component;
+    }
+
+    if (typeof options.value != "undefined") {
+        component.value(options.value);
     }
 
     return component;
