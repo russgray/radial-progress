@@ -31,44 +31,51 @@
 var d3 = require('d3');
 
 module.exports = function radialProgress(parent) {
-    var _data=null,
-        _duration= 1000,
+    var _data = null,
+        _duration = 1000,
         _selection,
-        _margin = {top:0, right:0, bottom:30, left:0},
+        _margin = {
+            top: 0,
+            right: 0,
+            bottom: 30,
+            left: 0
+        },
         __width = 300,
         __height = 300,
         _diameter,
-        _label="",
-        _fontSize=10;
+        _label = "",
+        _fontSize = 10;
 
 
     var _mouseClick;
 
-    var _value= 0,
+    var _value = 0,
         _minValue = 0,
         _maxValue = 100;
 
-    var  _currentArc= 0, _currentArc2= 0, _currentValue=0;
+    var _currentArc = 0,
+        _currentArc2 = 0,
+        _currentValue = 0;
 
     var _arc = d3.svg.arc()
-        .startAngle(0 * (Math.PI/180)); //just radians
+        .startAngle(0 * (Math.PI / 180)); //just radians
 
     var _arc2 = d3.svg.arc()
-        .startAngle(0 * (Math.PI/180))
+        .startAngle(0 * (Math.PI / 180))
         .endAngle(0); //just radians
 
 
-    _selection=d3.select(parent);
+    _selection = d3.select(parent);
 
 
     function component() {
 
-        _selection.each(function (data) {
+        _selection.each(function(data) {
 
             // Select the svg element, if it exists.
             var svg = d3.select(this).selectAll("svg").data([data]);
 
-            var enter = svg.enter().append("svg").attr("class","radial-svg").append("g");
+            var enter = svg.enter().append("svg").attr("class", "radial-svg").append("g");
 
             measure();
 
@@ -76,27 +83,27 @@ module.exports = function radialProgress(parent) {
                 .attr("height", __height);
 
 
-            var background = enter.append("g").attr("class","component")
-                .attr("cursor","pointer")
-                .on("click",onMouseClick);
+            var background = enter.append("g").attr("class", "component")
+                .attr("cursor", "pointer")
+                .on("click", onMouseClick);
 
 
-            _arc.endAngle(360 * (Math.PI/180))
+            _arc.endAngle(360 * (Math.PI / 180))
 
             background.append("rect")
-                .attr("class","background")
+                .attr("class", "background")
                 .attr("width", _width)
                 .attr("height", _height);
 
             background.append("path")
-                .attr("transform", "translate(" + _width/2 + "," + _width/2 + ")")
+                .attr("transform", "translate(" + _width / 2 + "," + _width / 2 + ")")
                 .attr("d", _arc);
 
             background.append("text")
                 .attr("class", "label")
-                .attr("transform", "translate(" + _width/2 + "," + (_width + _fontSize) + ")")
+                .attr("transform", "translate(" + _width / 2 + "," + (_width + _fontSize) + ")")
                 .text(_label);
-           var g = svg.select("g")
+            var g = svg.select("g")
                 .attr("transform", "translate(" + _margin.left + "," + _margin.top + ")");
 
 
@@ -104,55 +111,57 @@ module.exports = function radialProgress(parent) {
             enter.append("g").attr("class", "arcs");
             var path = svg.select(".arcs").selectAll(".arc").data(data);
             path.enter().append("path")
-                .attr("class","arc")
-                .attr("transform", "translate(" + _width/2 + "," + _width/2 + ")")
+                .attr("class", "arc")
+                .attr("transform", "translate(" + _width / 2 + "," + _width / 2 + ")")
                 .attr("d", _arc);
 
             //Another path in case we exceed 100%
             var path2 = svg.select(".arcs").selectAll(".arc2").data(data);
             path2.enter().append("path")
-                .attr("class","arc2")
-                .attr("transform", "translate(" + _width/2 + "," + _width/2 + ")")
+                .attr("class", "arc2")
+                .attr("transform", "translate(" + _width / 2 + "," + _width / 2 + ")")
                 .attr("d", _arc2);
 
 
             enter.append("g").attr("class", "labels");
             var label = svg.select(".labels").selectAll(".label").data(data);
             label.enter().append("text")
-                .attr("class","label")
-                .attr("y",_width/2+_fontSize/3)
-                .attr("x",_width/2)
-                .attr("cursor","pointer")
-                .attr("width",_width)
+                .attr("class", "label")
+                .attr("y", _width / 2 + _fontSize / 3)
+                .attr("x", _width / 2)
+                .attr("cursor", "pointer")
+                .attr("width", _width)
                 // .attr("x",(3*_fontSize/2))
-                .text(function (d) { return Math.round((_value-_minValue)/(_maxValue-_minValue)*100) + "%" })
-                .style("font-size",_fontSize+"px")
-                .on("click",onMouseClick);
+                .text(function(d) {
+                    return Math.round((_value - _minValue) / (_maxValue - _minValue) * 100) + "%"
+                })
+                .style("font-size", _fontSize + "px")
+                .on("click", onMouseClick);
 
-            path.exit().transition().duration(500).attr("x",1000).remove();
+            path.exit().transition().duration(500).attr("x", 1000).remove();
 
 
             layout(svg);
 
             function layout(svg) {
 
-                var ratio=(_value-_minValue)/(_maxValue-_minValue);
-                var endAngle=Math.min(360*ratio,360);
-                endAngle=endAngle * Math.PI/180;
+                var ratio = (_value - _minValue) / (_maxValue - _minValue);
+                var endAngle = Math.min(360 * ratio, 360);
+                endAngle = endAngle * Math.PI / 180;
 
                 path.datum(endAngle);
                 path.transition().duration(_duration)
                     .attrTween("d", arcTween);
 
                 if (ratio > 1) {
-                    path2.datum(Math.min(360*(ratio-1),360) * Math.PI/180);
+                    path2.datum(Math.min(360 * (ratio - 1), 360) * Math.PI / 180);
                     path2.transition().delay(_duration).duration(_duration)
                         .attrTween("d", arcTween2);
                 }
 
-                label.datum(Math.round(ratio*100));
+                label.datum(Math.round(ratio * 100));
                 label.transition().duration(_duration)
-                    .tween("text",labelTween);
+                    .tween("text", labelTween);
 
             }
 
@@ -179,7 +188,7 @@ module.exports = function radialProgress(parent) {
         var i = d3.interpolate(_currentArc, a);
 
         return function(t) {
-            _currentArc=i(t);
+            _currentArc = i(t);
             return _arc.endAngle(i(t))();
         };
     }
@@ -194,13 +203,13 @@ module.exports = function radialProgress(parent) {
 
 
     function measure() {
-        _width=_diameter - _margin.right - _margin.left - _margin.top - _margin.bottom;
-        _height=_width;
-        _fontSize=_width*.2;
-        _arc.outerRadius(_width/2);
-        _arc.innerRadius(_width/2 * .85);
-        _arc2.outerRadius(_width/2 * .85);
-        _arc2.innerRadius(_width/2 * .85 - (_width/2 * .15));
+        _width = _diameter - _margin.right - _margin.left - _margin.top - _margin.bottom;
+        _height = _width;
+        _fontSize = _width * .2;
+        _arc.outerRadius(_width / 2);
+        _arc.innerRadius(_width / 2 * .85);
+        _arc2.outerRadius(_width / 2 * .85);
+        _arc2.innerRadius(_width / 2 * .85 - (_width / 2 * .15));
     }
 
 
@@ -210,7 +219,7 @@ module.exports = function radialProgress(parent) {
         return component;
     }
 
-    component.value = function (_) {
+    component.value = function(_) {
         if (!arguments.length) return _value;
         _value = [_];
         _selection.datum([_value]);
@@ -226,7 +235,7 @@ module.exports = function radialProgress(parent) {
 
     component.diameter = function(_) {
         if (!arguments.length) return _diameter
-        _diameter =  _;
+        _diameter = _;
         return component;
     };
 
@@ -254,9 +263,9 @@ module.exports = function radialProgress(parent) {
         return component;
     };
 
-    component.onClick = function (_) {
+    component.onClick = function(_) {
         if (!arguments.length) return _mouseClick;
-        _mouseClick=_;
+        _mouseClick = _;
         return component;
     }
 
