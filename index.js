@@ -28,8 +28,6 @@
  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var d3 = require('d3');
-
 module.exports = function radialProgress(parent) {
     var _data = null,
         _duration = 1000,
