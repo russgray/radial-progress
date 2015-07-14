@@ -1,6 +1,6 @@
 {
   "name": "radial-progress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "fork of d3 graph",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/meandavejustice/radial-progress.git"
+    "url": "https://github.com/russgray/radial-progress.git"
   },
   "keywords": [
     "d3",
@@ -16,13 +16,13 @@
     "graph",
     "percentage"
   ],
-  "author": "meandave",
+  "author": "russgray",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/meandavejustice/radial-progress/issues"
+    "url": "https://github.com/russgray/radial-progress/issues"
   },
-  "homepage": "https://github.com/meandavejustice/radial-progress",
-  "dependencies": {
+  "homepage": "https://github.com/russgray/radial-progress",
+  "devDependencies": {
     "d3": "^3.4.12"
   }
 }
