@@ -5,6 +5,7 @@
 
   Modified/forked by ---
   Copyright (c) 2014 Dave Justice
+  Copyright (c) 2015 Russ Gray
 
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -65,6 +66,7 @@ module.exports = function radialProgress(parent, options) {
         .startAngle(0 * (Math.PI / 180))
         .endAngle(0); //just radians
 
+    var _cursorType = options.cursor || "pointer";
 
     _selection = d3.select(parent);
 
@@ -85,7 +87,7 @@ module.exports = function radialProgress(parent, options) {
 
 
             var background = enter.append("g").attr("class", "component")
-                .attr("cursor", "pointer")
+                .attr("cursor", _cursorType)
                 .on("click", onMouseClick);
 
 
@@ -130,7 +132,7 @@ module.exports = function radialProgress(parent, options) {
                 .attr("class", "label")
                 .attr("y", _width / 2 + _fontSize / 3)
                 .attr("x", _width / 2)
-                .attr("cursor", "pointer")
+                .attr("cursor", _cursorType)
                 .attr("width", _width)
                 // .attr("x",(3*_fontSize/2))
                 .text(function(d) {
