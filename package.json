@@ -22,7 +22,7 @@
     "url": "https://github.com/russgray/radial-progress/issues"
   },
   "homepage": "https://github.com/russgray/radial-progress",
-  "devDependencies": {
+  "dependencies": {
     "d3": "^3.4.12"
   }
 }
